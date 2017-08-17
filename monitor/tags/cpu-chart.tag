@@ -9,8 +9,9 @@
       labels: this.nowtime,
       datasets: [{
         label: 'CPU',
-        fill: false,
+        fill: true,
         data: this.source,
+        backgroundColor: "rgba(153,255,51,0.4)",
         borderColor: "rgba(153,255,51,0.4)"
       }]
     };
@@ -33,7 +34,10 @@
             beginAtZero: true,
             max: 100,
             min: 0,
-            stepSize: 10
+            stepSize: 10,
+            callback: function(value, index, values) {
+              return value + ' %';
+            }
           }
         }]
       },

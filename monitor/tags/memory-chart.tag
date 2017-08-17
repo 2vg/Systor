@@ -9,8 +9,9 @@
       labels: this.nowtime,
       datasets: [{
         label: 'MEMORY',
-        fill: false,
+        fill: true,
         data: this.source,
+        backgroundColor: "rgba(255,153,0,0.4)",
         borderColor: "rgba(255,153,0,0.4)"
       }]
     };
@@ -33,7 +34,10 @@
             beginAtZero: true,
             max: 0,
             min: 0,
-            stepSize: 0.5
+            stepSize: 0.5,
+            callback: function(value, index, values) {
+              return value + ' GB';
+            }
           }
         }]
       },
