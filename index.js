@@ -21,9 +21,6 @@ const gByte = mByte * 1024;
   */
 
   io.on('connection', async (socket) => {
-    let cpu = await currLoad();
-    let mem = await currMem();
-
     io.emit('sysinfo', {
       platform: os.platform,
       distro: os.distro,
@@ -35,7 +32,7 @@ const gByte = mByte * 1024;
     });
 
     (async () => {
-      let start, end;
+      let start, end, cpu, mem;
 
       // ソケットが接続されてる間
       while(socket.connected) {
