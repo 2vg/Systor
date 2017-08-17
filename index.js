@@ -11,20 +11,19 @@ const mByte = 1024 * 1024;
 const gByte = mByte * 1024;
 /********************/
 
-(async() => {
-  let id,
-      os = await OSInfo(),
-      totalmem = await totalMem();
+(async () => {
+  const os = await OSInfo();
+  const totalmem = await totalMem();
   /* html一式で動くようになったため不要 だが俺はあえて残しておくぞ
   app.get('/', function(req, res){
     res.sendFile(__dirname + '/monitor/index.html');
   });
   */
-  
-  io.on('connection', async function(socket){
+
+  io.on('connection', async (socket) => {
     let cpu = await currLoad();
     let mem = await currMem();
-  
+
     io.emit('sysinfo', {
       platform: os.platform,
       distro: os.distro,
@@ -34,31 +33,31 @@ const gByte = mByte * 1024;
       hostname: os.hostname,
       totalmemory: totalmem
     });
-    
+
     io.emit('stats', {
       cpu: cpu,
       memory: mem
     });
-    
-    id = setInterval(async function(){
-      let cpu = await currLoad();
-      let mem = await currMem();
+
+    const id = setInterval(async () => {
+      cpu = await currLoad();
+      mem = await currMem();
       io.emit('stats', {
         cpu: cpu,
         memory: mem,
       });
     }, 5000); // ここ、Delayを使っていい方法があるはず？
     // Intervalダサい、マジで
-    
+
     socket.on('disconnect', function(){
       clearInterval(id);
     });
   });
-  
-  http.listen(PORT, function(){
+
+  http.listen(PORT, () => {
     console.log('listening on *:3000');
   });
-  
+
   /* 実装中
   let iface = await ifaceAll();
   iface.forEach((e) => {
@@ -68,97 +67,97 @@ const gByte = mByte * 1024;
 
 /* 情 報 を 返 す ヤ ツ */
 // CPU Load
-function currLoad(){
-  return new Promise(function(resolve,reject){
+function currLoad() {
+  return new Promise((resolve,reject) => {
     sister.currentLoad()
       .then(data => {
-        resolve(Math.floor(data.currentload)); 
+        resolve(Math.floor(data.currentload));
       })
-      .catch(error =>
-        console.error(error)
-      );
+      .catch(error => {
+        console.error(error);
+      });
   })
 }
 
 // MEMORY USED
-function currMem(){
-  return new Promise(function(resolve,reject){
+function currMem() {
+  return new Promise((resolve,reject) => {
     sister.mem()
       .then(data => {
-        resolve(Math.floor(data.used / gByte * 100) / 100); 
+        resolve(Math.floor(data.used / gByte * 100) / 100);
       })
-      .catch(error =>
-        console.error(error)
-      );
+      .catch(error => {
+        console.error(error);
+      });
   })
 }
 
 // TOTALMEMORY
-function totalMem(){
-  return new Promise(function(resolve,reject){
+function totalMem() {
+  return new Promise((resolve,reject) => {
     sister.mem()
       .then(data => {
         resolve(Math.ceil(Math.floor(data.total / gByte * 10) / 10)); 
       })
-      .catch(error =>
-        console.error(error)
-      );
+      .catch(error => {
+        console.error(error);
+      });
   })
 }
 
 // ALL NETWORK INTERFACE
-function ifaceAll(){
-  return new Promise(function(resolve,reject){
+function ifaceAll() {
+  return new Promise((resolve, reject) => {
     sister.networkInterfaces()
       .then(data => {
         let iface = [];
-        
+
         data.forEach((e, i) => {
           iface[i] = e.iface;
         });
-        
-        resolve(iface); 
+
+        resolve(iface);
       })
-      .catch(error =>
-        console.error(error)
-      );
+      .catch(error => {
+        console.error(error);
+      });
   })
 }
 
 //NET STATS
-function netStats(iface){
-  return new Promise(function(resolve,reject){
+function netStats(iface) {
+  return new Promise((resolve, reject) => {
     sister.networkStats(iface)
       .then(data => {
-        resolve(data); 
+        resolve(data);
       })
-      .catch(error =>
-        console.error(error)
-      );
+      .catch(error => {
+        console.error(error);
+      });
   })
 }
 
 //OS INFOMATION
-function OSInfo(){
-  return new Promise(function(resolve,reject){
+function OSInfo() {
+  return new Promise((resolve, reject) => {
     sister.osInfo()
       .then(data => {
-        resolve(data); 
+        resolve(data);
       })
-      .catch(error =>
-        console.error(error)
-      );
+      .catch(error => {
+        console.error(error):
+      });
   })
 }
 /********************/
 
 // そのうち使うかもしれない 独自Delay
-async function delay (s){
+async function delay (s) {
   await sleep(s);
 }
 
-function sleep(s){
+function sleep(s) {
   return new Promise(resolve => {
-    setTimeout(() => { resolve(true) }, s);
+    setTimeout(() => resolve(true), s);
   });
 }
