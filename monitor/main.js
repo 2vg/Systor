@@ -1,7 +1,14 @@
 let socket = io('http://localhost:3000');
 
 socket.on('sysinfo', (data) => {
-  memoryOptions.scales.yAxes[0].ticks.max = data.totalmemory;
+  riot.mount('memory-chart', {
+    socket: socket,
+    totalMemory: data.totalmemory
+  });
+
+  riot.mount('cpu-chart', {
+    socket: socket
+  });
 
   riot.mount('os-info', {
     platform: data.platform,
