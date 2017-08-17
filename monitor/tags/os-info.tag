@@ -2,19 +2,19 @@
   <h1>System Information</h1>
   <hr />
   <table>
-    <tr>        
+    <tr>
       <th>Platform:</th>
       <td>{ platform }</td>
     </tr>
-    <tr>        
+    <tr>
       <th>Distro:</th>
       <td>{ distro }</td>
     </tr>
-    <tr>        
+    <tr>
       <th>Release:</th>
       <td>{ release }</td>
     </tr>
-    <tr>        
+    <tr>
       <th>Kernel:</th>
       <td>{ kernel }</td>
     </tr>
@@ -27,6 +27,7 @@
       <td>{ hostname }</td>
     </tr>
   </table>
+
   <script>
     this.platform = opts.platform;
     this.distro = opts.distro;
@@ -35,6 +36,7 @@
     this.arch = opts.arch;
     this.hostname = opts.hostname;
   </script>
+
   <style>
     :scope {
       display: flex;
