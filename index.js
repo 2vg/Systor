@@ -39,6 +39,7 @@ const gByte = mByte * 1024;
         start = new Date();
         cpu = await currLoad();
         mem = await currMem();
+        console.log(mem);
         io.emit('stats', {
           cpu: cpu,
           memory: mem,
@@ -78,7 +79,7 @@ async function currLoad() {
 async function currMem() {
   try {
     const data = await sister.mem();
-    return Math.floor(Math.floor(data.used / gByte * 100) / 100);
+    return Math.floor(data.used / gByte * 100) / 100;
   }
   catch(error) {
     console.error(error);
