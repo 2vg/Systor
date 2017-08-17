@@ -1,0 +1,10 @@
+.os-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cpu-mem-container{
+  display: flex;
+  justify-content: space-around;
+}
