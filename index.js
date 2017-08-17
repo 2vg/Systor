@@ -39,7 +39,6 @@ const gByte = mByte * 1024;
         start = new Date();
         cpu = await currLoad();
         mem = await currMem();
-        console.log(mem);
         io.emit('stats', {
           cpu: cpu,
           memory: mem,
