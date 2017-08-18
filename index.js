@@ -12,22 +12,25 @@ const gByte = mByte * 1024;
 /********************/
 
 (async () => {
+  let iface = await ifaceAll();
+  for (const x of iface) {
+    let y = await netStats(x);
+    console.log(y);
+  }
+})();
+
+(async () => {
   const os = await OSInfo();
+  const cpu = await CPUInfo();
   const totalmem = await totalMem();
-  /* html一式で動くようになったため不要 だが俺はあえて残しておくぞ
-  app.get('/', function(req, res){
-    res.sendFile(__dirname + '/monitor/index.html');
-  });
-  */
 
   io.on('connection', async (socket) => {
     io.emit('sysinfo', {
       platform: os.platform,
       distro: os.distro,
-      release: os.release,
       kernel: os.kernel,
       arch: os.arch,
-      hostname: os.hostname,
+      cpu: `${cpu.manufacturer} ${cpu.brand} - ${cpu.cores} Cores`,
       totalmemory: totalmem
     });
 
@@ -59,7 +62,8 @@ const gByte = mByte * 1024;
   let iface = await ifaceAll();
   iface.forEach((e) => {
     
-  });*/
+  });
+  */
 })();
 
 /* 情 報 を 返 す ヤ ツ */
@@ -107,7 +111,7 @@ async function ifaceAll() {
   }
 }
 
-//NET STATS
+// NET STATS
 async function netStats(iface) {
   try {
     return await sister.networkStats(iface);
@@ -117,10 +121,20 @@ async function netStats(iface) {
   }
 }
 
-//OS INFOMATION
+// OS INFOMATION
 async function OSInfo() {
   try {
     return await sister.osInfo();
+  }
+  catch(error) {
+    console.error(error);
+  }
+}
+
+// CPU INFORMATION
+async function CPUInfo() {
+  try {
+    return await sister.cpu();
   }
   catch(error) {
     console.error(error);

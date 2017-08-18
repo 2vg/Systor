@@ -2,7 +2,7 @@
   <canvas ref="chart" width="400" height="400"></canvas>
 
   <script>
-    this.source = Array.from({ length: 10 }, () => null);
+    this.source = Array.from({ length: 5 }, () => null);
     this.nowtime = [];
 
     this.data = {
@@ -56,8 +56,10 @@
 
       // time
       const time = new Date();
+      let x = moment().format('LTS');
+      console.log(x);
       this.nowtime.shift();
-      this.nowtime[9] = ("0"+(time.getHours() + 1)).slice(-2) + ":" + ("0"+(time.getMinutes() + 1)).slice(-2) + ":" + ("0"+(time.getSeconds() + 1)).slice(-2);
+      this.nowtime[4] = ("0"+(time.getHours() + 1)).slice(-2) + ":" + ("0"+(time.getMinutes() + 1)).slice(-2) + ":" + ("0"+(time.getSeconds() + 1)).slice(-2);
 
       // source
       this.source.shift();

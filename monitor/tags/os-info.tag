@@ -1,47 +1,50 @@
 <os-info>
-  <h1>System Information</h1>
-  <hr />
-  <table>
+  <table class="table table-bordered">
     <tr>
-      <th>Platform:</th>
-      <td>{ platform }</td>
+      <th colspan="2"><center><i class="fa fa-hdd-o" /> Hardware Information</center></th>
     </tr>
     <tr>
-      <th>Distro:</th>
-      <td>{ distro }</td>
+      <td>Platform:</td>
+      <td><i class="fa fa-{ os }" /> [{ platform }] { distro } { arch } / { kernel }</td>
     </tr>
     <tr>
-      <th>Release:</th>
-      <td>{ release }</td>
+      <td>CPU:</td>
+      <td><i class="icon-cpu-processor" /> { cpu }</td>
     </tr>
     <tr>
-      <th>Kernel:</th>
-      <td>{ kernel }</td>
-    </tr>
-    <tr>
-      <th>Arch:</th>
-      <td>{ arch }</td>
-    </tr>
-    <tr>
-      <th>Hostname:</th>
-      <td>{ hostname }</td>
+      <td>Memory:</td>
+      <td><i class="icon-ram" /> { memory } GB RAM</td>
     </tr>
   </table>
 
   <script>
     this.platform = opts.platform;
     this.distro = opts.distro;
-    this.release = opts.release;
     this.kernel = opts.kernel;
     this.arch = opts.arch;
-    this.hostname = opts.hostname;
+    this.cpu = opts.cpu;
+    this.memory = opts.memory;
+    
+    this.os = ((os) => {
+      switch (this.platform){
+        case 'Linux':
+          return "linux";
+          break;
+        case 'Darwin':
+          return "apple";
+          break;
+        case 'Windows':
+          return "windows";
+          break;
+      }
+    })(this.platform);
   </script>
 
   <style>
     :scope {
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: space-around;
     }
   </style>
 </os-info>

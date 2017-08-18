@@ -1,4 +1,4 @@
-let socket = io('http://localhost:3000');
+let socket = io('URL');
 
 socket.on('sysinfo', (data) => {
   riot.mount('memory-chart', {
@@ -16,6 +16,8 @@ socket.on('sysinfo', (data) => {
     release: data.release,
     kernel: data.kernel,
     arch: data.arch,
+    cpu: data.cpu,
+    memory: data.totalmemory,
     hostname: data.hostname
   });
 });
