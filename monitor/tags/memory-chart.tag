@@ -1,5 +1,6 @@
 <memory-chart>
-  <canvas ref="chart" width="400" height="400"></canvas>
+  <center><h6>{ title }</h6><center>
+  <canvas ref="chart"></canvas>
 
   <script>
     this.source = Array.from({ length: 5 }, () => null);
@@ -41,7 +42,7 @@
           }
         }]
       },
-      responsive: false,
+      responsive: true,
       responsiveAnimationDuration: 0,
     };
 
@@ -62,6 +63,9 @@
       // source
       this.source.shift();
       this.source.push(loadValue);
+      
+      // Title
+      this.title = `MEMORY used: ${this.source[4]}GB`
 
       // chartInstance
       this.chartInstance.update();

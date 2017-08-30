@@ -1,5 +1,6 @@
 <cpu-chart>
-  <canvas ref="chart" width="400" height="400"></canvas>
+  <center><h6>{ title }</h6><center>
+  <canvas ref="chart"></canvas>
 
   <script>
     this.source = Array.from({ length: 5 }, () => null);
@@ -41,7 +42,7 @@
           }
         }]
       },
-      responsive: false,
+      responsive: true,
       responsiveAnimationDuration: 0,
     };
 
@@ -56,14 +57,15 @@
 
       // time
       const time = new Date();
-      let x = moment().format('LTS');
-      console.log(x);
       this.nowtime.shift();
       this.nowtime[4] = ("0"+(time.getHours() + 1)).slice(-2) + ":" + ("0"+(time.getMinutes() + 1)).slice(-2) + ":" + ("0"+(time.getSeconds() + 1)).slice(-2);
 
       // source
       this.source.shift();
       this.source.push(loadValue);
+      
+      // Title
+      this.title = `CPU used: ${this.source[4]}%`
 
       // chartInstance
       this.chartInstance.update();

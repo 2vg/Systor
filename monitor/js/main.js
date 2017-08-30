@@ -1,9 +1,9 @@
-let socket = io('URL');
+let socket = io('http://157.7.142.47:3000');
 
 socket.on('sysinfo', (data) => {
   riot.mount('memory-chart', {
     socket: socket,
-    totalMemory: data.totalmemory
+    totalMemory: data.totalmemory,
   });
 
   riot.mount('cpu-chart', {
@@ -18,6 +18,10 @@ socket.on('sysinfo', (data) => {
     arch: data.arch,
     cpu: data.cpu,
     memory: data.totalmemory,
-    hostname: data.hostname
+    hostname: data.hostname,
+    dname: data.dname,
+    dsize: data.dsize,
+    duse: data.duse,
+    dused: data.dused,
   });
 });

@@ -7,22 +7,94 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const sister = require('systeminformation');
 
-const mByte = 1024 * 1024;
+const kByte = 1024;
+const mByte = kByte * 1024;
 const gByte = mByte * 1024;
 /********************/
 
-(async () => {
-  let iface = await ifaceAll();
-  for (const x of iface) {
-    let y = await netStats(x);
-    console.log(y);
+/*
+async function test() {
+  try {
+    const data = await sister.networkInterfaces();
+    return data;
   }
-})();
+  catch(error) {
+    console.error(error);
+  }
+}
 
 (async () => {
-  const os = await OSInfo();
-  const cpu = await CPUInfo();
+  let t = await test();
+  let data = 0;
+  console.log(t);
+  
+  /*
+  for(const x of t) {
+    data += Number(x.size);
+  }
+  console.log(Math.round(data / gByte));*/
+
+/*
+  let iface = await ifaceAll();
+  let data = [];
+  
+  for(const x of iface) {
+    let y = await netStats(x);
+    
+    if(y.operstate === "up") {
+      data.push(x);
+    }
+  }
+  
+  for(const x of data) {
+    let y = await netStats(x);
+    
+    if(y.operstate === "up") {
+      if(y.rx_sec / mByte > 1) {
+        console.log(y.rx_sec / mByte);
+      }
+      else if(y.rx_sec / kByte > 1) {
+        console.log(y.rx_sec / kByte);
+      }
+      else {
+        console.log(y.rx_sec);
+      }
+      
+      if(y.tx_sec / mByte > 1) {
+        console.log(y.tx_sec / mByte);
+      }
+      else if(y.tx_sec / kByte > 1) {
+        console.log(y.tx_sec / kByte);
+      }
+      else {
+        console.log(y.tx_sec);
+      }
+    }
+  }
+})();*/
+
+(async () => {
+  const os = await osInfo();
+  const cpu = await cpuInfo();
+  const iface = await ifaceAll();
+  const dinfo = await diskInfo();
   const totalmem = await totalMem();
+  
+  let netData = [];
+  let dname, dsize, duse, dused;
+  
+  for(const v of iface) {
+    let r = await netStats(v);
+    
+    if(r.operstate === "up") {
+      netData.push(v);
+    }
+  }
+  
+  dname = dinfo[0].fs;
+  dsize = Math.floor(dinfo[0].size / gByte * 10) / 10;
+  duse  = Math.floor(dinfo[0].use * 10) / 10;
+  dused = Math.floor(dinfo[0].used / gByte * 10) / 10;
 
   io.on('connection', async (socket) => {
     io.emit('sysinfo', {
@@ -30,8 +102,12 @@ const gByte = mByte * 1024;
       distro: os.distro,
       kernel: os.kernel,
       arch: os.arch,
-      cpu: `${cpu.manufacturer} ${cpu.brand} - ${cpu.cores} Cores`,
-      totalmemory: totalmem
+      cpu: `${cpu.manufacturer} ${cpu.brand} (${cpu.speed} GHz) - ${cpu.cores}* Cores`,
+      totalmemory: totalmem,
+      dname: dname,
+      dsize: dsize,
+      duse: duse,
+      dused: dused,
     });
 
     (async () => {
@@ -42,6 +118,33 @@ const gByte = mByte * 1024;
         start = new Date();
         cpu = await currLoad();
         mem = await currMem();
+        
+        /*for(const v of netData) {
+          let r = await netStats(v);
+    
+          if(y.operstate === "up") {
+            if(y.rx_sec / mByte > 1) {
+              console.log(y.rx_sec / mByte);
+            }
+            else if(y.rx_sec / kByte > 1) {
+              console.log(y.rx_sec / kByte);
+            }
+            else {
+              console.log(y.rx_sec);
+            }
+      
+            if(y.tx_sec / mByte > 1) {
+              console.log(y.tx_sec / mByte);
+            }
+            else if(y.tx_sec / kByte > 1) {
+              console.log(y.tx_sec / kByte);
+            }
+            else {
+              console.log(y.tx_sec);
+            }
+          }
+        }*/
+        
         io.emit('stats', {
           cpu: cpu,
           memory: mem,
@@ -57,13 +160,7 @@ const gByte = mByte * 1024;
   http.listen(PORT, () => {
     console.log('listening on *:3000');
   });
-
-  /* 実装中
-  let iface = await ifaceAll();
-  iface.forEach((e) => {
-    
-  });
-  */
+  
 })();
 
 /* 情 報 を 返 す ヤ ツ */
@@ -121,8 +218,19 @@ async function netStats(iface) {
   }
 }
 
+// DISK INFO
+async function diskInfo() {
+  try {
+    const data = await sister.fsSize();
+    return data;
+  }
+  catch(error) {
+    console.error(error);
+  }
+}
+
 // OS INFOMATION
-async function OSInfo() {
+async function osInfo() {
   try {
     return await sister.osInfo();
   }
@@ -132,7 +240,7 @@ async function OSInfo() {
 }
 
 // CPU INFORMATION
-async function CPUInfo() {
+async function cpuInfo() {
   try {
     return await sister.cpu();
   }

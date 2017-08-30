@@ -11,13 +11,28 @@ This is under development !!!
 
 # Install
 Let's clone.
-`git clone https://github.com/2vg/systor`
+```bash
+git clone https://github.com/2vg/systor
+```
 
-in systor folder, 
-`npm install`
+in systor folder,
+```bash
+npm install
+npm start
+```
 
-and,
-`node index.js`
+want background, can use nohup, forever...
+
+```bash
+npm install forever
+forever start .
+forever stop .
+```
+
+```bash
+nohup npm start > out.log 2> err.log &
+kill <process_id>
+```
 
 And, put monitor folder on Your Web server and connect.
 

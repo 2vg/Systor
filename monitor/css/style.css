@@ -1,3 +1,8 @@
+.body {
+  width: 80vw;
+  height: 90vw;
+}
+
 .os-container {
   display: flex;
   flex-direction: column;
@@ -7,4 +12,32 @@
 .cpu-mem-container {
   display: flex;
   justify-content: space-around;
+}
+
+.cpu {
+  flex-basis: 40%;
+}
+
+.mem {
+  flex-basis: 40%;
+}
+
+@media (max-width: 600px) {
+  .os-container {
+    display: flex;
+  }
+  
+  .cpu-mem-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .cpu {
+    flex-basis: 80%;
+  }
+
+  .mem {
+    flex-basis: 80%;
+  }
 }
